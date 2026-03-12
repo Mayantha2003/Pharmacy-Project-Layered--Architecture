@@ -47,7 +47,7 @@
                         </ComboBox>
                         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../../image/manager.png" />
+                                <Image url="@assests/image/manager.png" />
                             </image>
                         </ImageView>
                         <VBox prefHeight="36.0" prefWidth="100.0">

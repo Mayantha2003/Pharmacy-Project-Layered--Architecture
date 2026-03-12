@@ -82,4 +82,10 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
         return 0;
     }
+
+    @Override
+    public int getCustomerCount() throws SQLException, ClassNotFoundException {
+            ResultSet rs = CRUDUtil.execute("SELECT COUNT(*) FROM Customers");
+            return rs.next() ? rs.getInt(1) : 0;
+    }
 }

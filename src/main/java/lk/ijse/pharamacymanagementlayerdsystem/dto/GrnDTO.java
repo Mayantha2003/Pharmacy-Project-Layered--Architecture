@@ -16,13 +16,13 @@ public class GrnDTO {
     private String notes;
     private long receivedBy;
 
-    private List<GRNLineTM> lines = new ArrayList<>();
+    private List<GrnLineDTO> lines = new ArrayList<>();
 
     public GrnDTO() {
     }
 
     public GrnDTO(String grnNumber, long supplierId, String supplierName, LocalDate grnDate, String notes,
-                  double totalAmount, long receivedBy, List<GRNLineTM> lines) {
+                  double totalAmount, long receivedBy, List<GrnLineDTO> lines) {
         this.grnNumber = grnNumber;
         this.supplierId = supplierId;
         this.supplierName = supplierName;
@@ -34,7 +34,7 @@ public class GrnDTO {
     }
 
     public GrnDTO(long grnId, String grnNumber, long supplierId, String supplierName, LocalDate grnDate,
-                  double totalAmount, String notes, long receivedBy, List<GRNLineTM> lines) {
+                  double totalAmount, String notes, long receivedBy, List<GrnLineDTO> lines) {
         this.grnId = grnId;
         this.grnNumber = grnNumber;
         this.supplierId = supplierId;
@@ -110,14 +110,14 @@ public class GrnDTO {
         this.receivedBy = receivedBy;
     }
 
-    public List<GRNLineTM> getLines() {
+    public List<GrnLineDTO> getLines() {
         return lines;
     }
 
-    public void setLines(List<GRNLineTM> lines) {
+    public void setLines(List<GrnLineDTO> lines) {
         this.lines = lines;
     }
-    public void addLine(GRNLineTM line) {
+    public void addLine(GrnLineDTO line) {
         this.lines.add(line);
         this.totalAmount += line.getLineTotal();
     }

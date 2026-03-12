@@ -24,7 +24,6 @@ public class DAOFactory {
         INVOICE,
         INVOICEDETAIL,
         INVOICEPAYMENT,
-        DASHBOARD
 
 
     }
@@ -42,7 +41,6 @@ public class DAOFactory {
             case INVOICE -> new InvoiceDAOImpl();
             case INVOICEDETAIL -> new InvoiceDetailDAOImpl();
             case INVOICEPAYMENT -> new InvoicePaymentDAOImpl();
-            case DASHBOARD -> new DashboardDAOImpl();
             default -> null;
         };
     }

@@ -50,9 +50,16 @@ public class BatchDAOImpl implements BatchDAO {
     @Override
     public boolean updateBatchStock(long batchId, int soldQty) throws SQLException, ClassNotFoundException {
         String sql = "UPDATE Batches SET qty_remaining = qty_remaining - ? WHERE batch_id = ? AND qty_remaining >= ?";
-
         return CRUDUtil.execute(sql, soldQty, batchId, soldQty);
     }
+
+    @Override
+    public int getExpiredCount() throws SQLException, ClassNotFoundException {
+            String sql = "SELECT COUNT(*) FROM Batches WHERE expiry_date <= DATE_ADD(CURDATE(), INTERVAL 30 DAY) AND qty_remaining > 0";
+            ResultSet rs = CRUDUtil.execute(sql);
+            return rs.next() ? rs.getInt(1) : 0;
+    }
+
 
 
 

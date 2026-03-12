@@ -124,8 +124,8 @@ public class AdminLayoutController implements Initializable {
     }
 
     @FXML
-    private void clickCategorieNav() throws IOException {
-        main_Form.getChildren().setAll(HelloApplication.loadFXML("Categorie"));
+    private void clickCategoryNav() throws IOException {
+        main_Form.getChildren().setAll(HelloApplication.loadFXML("Category"));
     }
 
     @FXML

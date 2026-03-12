@@ -21,76 +21,52 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class GRNController implements Initializable {
-    @FXML
-    private ComboBox<String> supplierCombo;
-    @FXML
-    private DatePicker grnDatePicker;
-    @FXML
-    private TextField grnNumberField;
-    @FXML
-    private TextField referenceNumberField;
 
-    @FXML
-    private ComboBox<String> lineProductCombo;
-    @FXML
-    private TextField lineBatchNumberField;
-    @FXML
-    private DatePicker lineExpiryDatePicker;
-    @FXML
-    private DatePicker lineManufactureDatePicker;
-    @FXML
-    private TextField lineQtyField;
-    @FXML
-    private TextField lineCostPriceField;
-    @FXML
-    private TextField lineSellingPriceField;
+    @FXML private ComboBox<String> supplierCombo;
+    @FXML private DatePicker grnDatePicker;
+    @FXML private TextField grnNumberField;
+    @FXML private TextField referenceNumberField;
 
-    @FXML
-    private TableView<GRNLineTM> lineItemsTable;
-    @FXML
-    private TableColumn<GRNLineTM, Integer> lineNoCol;
-    @FXML
-    private TableColumn<GRNLineTM, String> lineProductCol;
-    @FXML
-    private TableColumn<GRNLineTM, String> lineBatchCol;
-    @FXML
-    private TableColumn<GRNLineTM, LocalDate> lineExpiryCol;
-    @FXML
-    private TableColumn<GRNLineTM, LocalDate> lineMfgCol;
-    @FXML
-    private TableColumn<GRNLineTM, Integer> lineQtyCol;
-    @FXML
-    private TableColumn<GRNLineTM, Double> lineCostCol;
-    @FXML
-    private TableColumn<GRNLineTM, Double> lineSellCol;
-    @FXML
-    private TableColumn<GRNLineTM, Double> lineTotalCol;
-    @FXML
-    private TableColumn<GRNLineTM, Void> lineActionsCol;
+    @FXML private ComboBox<String> lineProductCombo;
+    @FXML private TextField lineBatchNumberField;
+    @FXML private DatePicker lineExpiryDatePicker;
+    @FXML private DatePicker lineManufactureDatePicker;
+    @FXML private TextField lineQtyField;
+    @FXML private TextField lineCostPriceField;
+    @FXML private TextField lineSellingPriceField;
 
-    @FXML
-    private Label totalItemsLabel;
-    @FXML
-    private Label totalQtyLabel;
-    @FXML
-    private Label totalCostLabel;
-    @FXML
-    private Label totalSellingLabel;
-    @FXML
-    private Label profitMarginLabel;
-    @FXML
-    private Label profitPercentLabel;
+    @FXML private TableView<GRNLineTM> lineItemsTable;
+    @FXML private TableColumn<GRNLineTM, Integer> lineNoCol;
+    @FXML private TableColumn<GRNLineTM, String>  lineProductCol;
+    @FXML private TableColumn<GRNLineTM, String>  lineBatchCol;
+    @FXML private TableColumn<GRNLineTM, LocalDate> lineExpiryCol;
+    @FXML private TableColumn<GRNLineTM, LocalDate> lineMfgCol;
+    @FXML private TableColumn<GRNLineTM, Integer> lineQtyCol;
+    @FXML private TableColumn<GRNLineTM, Double>  lineCostCol;
+    @FXML private TableColumn<GRNLineTM, Double>  lineSellCol;
+    @FXML private TableColumn<GRNLineTM, Double>  lineTotalCol;
+    @FXML private TableColumn<GRNLineTM, Void>    lineActionsCol;
+
+    @FXML private Label totalItemsLabel;
+    @FXML private Label totalQtyLabel;
+    @FXML private Label totalCostLabel;
+    @FXML private Label totalSellingLabel;
+    @FXML private Label profitMarginLabel;
+    @FXML private Label profitPercentLabel;
 
     SupplierBO supplierBO = (SupplierBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.SUPPLIER);
-    ProductBO productBO = (ProductBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.PRODUCT);
-    GRNBO grnBO = (GRNBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.GRN);
-    BatchBO batchBO = (BatchBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.BATCH);
+    ProductBO  productBO  = (ProductBO)  BOFactory.getInstance().getBO(BOFactory.BOTypes.PRODUCT);
+    GRNBO      grnBO      = (GRNBO)      BOFactory.getInstance().getBO(BOFactory.BOTypes.GRN);
+    BatchBO    batchBO    = (BatchBO)    BOFactory.getInstance().getBO(BOFactory.BOTypes.BATCH);
 
-   private ObservableList<GRNLineTM> lineList = FXCollections.observableArrayList();
+    private ObservableList<GRNLineTM> lineList = FXCollections.observableArrayList();
 
+    // ---------------------------------------------------------------
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         grnDatePicker.setValue(LocalDate.now());
@@ -99,14 +75,19 @@ public class GRNController implements Initializable {
 
         loadSuppliers();
         loadProducts();
-
         setupTableColumns();
         setupActionsColumn();
-        lineItemsTable.setItems(lineList);
 
+        lineItemsTable.setItems(lineList);
         lineList.addListener((ListChangeListener<GRNLineTM>) c -> updateSummary());
         updateSummary();
 
+        generateGrnNumber();
+    }
+
+    // ---------------------------------------------------------------
+    /** GRN number generate — initialize() සහ clearAll() දෙකෙනුත් call කරනවා */
+    private void generateGrnNumber() {
         try {
             grnNumberField.setText(grnBO.generateNextGrnNumber());
         } catch (SQLException e) {
@@ -117,6 +98,7 @@ public class GRNController implements Initializable {
         }
     }
 
+    // ---------------------------------------------------------------
     private void loadSuppliers() {
         try {
             supplierCombo.setItems(supplierBO.getAllSupplierNames());
@@ -135,118 +117,115 @@ public class GRNController implements Initializable {
         }
     }
 
+    // ---------------------------------------------------------------
     private void setupTableColumns() {
-        lineNoCol.setCellFactory(column -> new TableCell<GRNLineTM, Integer>() {
+        lineNoCol.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                } else {
-                    setText(String.valueOf(getIndex() + 1));
-                }
+                setText(empty ? null : String.valueOf(getIndex() + 1));
             }
         });
 
         lineProductCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
-        lineBatchCol.setCellValueFactory(new PropertyValueFactory<>("batchNumber"));
-        lineExpiryCol.setCellValueFactory(new PropertyValueFactory<>("expiryDate"));
-        lineMfgCol.setCellValueFactory(new PropertyValueFactory<>("manufactureDate"));
-        lineQtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        lineCostCol.setCellValueFactory(new PropertyValueFactory<>("costPrice"));
-        lineSellCol.setCellValueFactory(new PropertyValueFactory<>("sellingPrice"));
-        lineTotalCol.setCellValueFactory(new PropertyValueFactory<>("lineTotal"));
+        lineBatchCol  .setCellValueFactory(new PropertyValueFactory<>("batchNumber"));
+        lineExpiryCol .setCellValueFactory(new PropertyValueFactory<>("expiryDate"));
+        lineMfgCol    .setCellValueFactory(new PropertyValueFactory<>("manufactureDate"));
+        lineQtyCol    .setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        lineCostCol   .setCellValueFactory(new PropertyValueFactory<>("costPrice"));
+        lineSellCol   .setCellValueFactory(new PropertyValueFactory<>("sellingPrice"));
+        lineTotalCol  .setCellValueFactory(new PropertyValueFactory<>("lineTotal"));
     }
 
     private void setupActionsColumn() {
-        lineActionsCol.setCellFactory(param -> new TableCell<GRNLineTM, Void>() {
+        lineActionsCol.setCellFactory(param -> new TableCell<>() {
             private final Button removeButton = new Button("🗑 Remove");
-
             {
-                removeButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5 10;");
+                removeButton.setStyle(
+                        "-fx-background-color: #e74c3c; -fx-text-fill: white;" +
+                                " -fx-font-weight: bold; -fx-padding: 5 10;"
+                );
                 removeButton.setOnAction(event -> {
                     GRNLineTM lineToRemove = getTableView().getItems().get(getIndex());
                     lineList.remove(lineToRemove);
                     updateSummary();
-                    showAlert("Info", "Line removed!");
                 });
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(removeButton);
-                }
+                setGraphic(empty ? null : removeButton);
             }
         });
     }
 
+    // ---------------------------------------------------------------
     @FXML
     private void handleAddLine() {
-        if (!validateLine()) {
-            return;
-        }
+        if (!validateLine()) return;
 
         try {
-            long productId = productBO.getProductIdFromDisplay(lineProductCombo.getValue());
+            long   productId = productBO.getProductIdFromDisplay(lineProductCombo.getValue());
+            int    qty       = Integer.parseInt(lineQtyField.getText().trim());
+            double cost      = Double.parseDouble(lineCostPriceField.getText().trim());
+            double sell      = Double.parseDouble(lineSellingPriceField.getText().trim());
 
+            if (qty <= 0) {
+                new Alert(Alert.AlertType.ERROR, "Quantity must be greater than zero!").show();
+                return;
+            }
+            if (cost <= 0 || sell <= 0) {
+                new Alert(Alert.AlertType.ERROR, "Price must be a positive value!").show();
+                return;
+            }
+            if (sell < cost) {
+                new Alert(Alert.AlertType.WARNING, "Selling Price is lower than Cost Price!").show();
+            }
+
+            // DTO — business logic (calculateLineTotal)
             GrnLineDTO line = new GrnLineDTO();
             line.setProductId(productId);
             line.setProductName(lineProductCombo.getValue());
             line.setBatchNumber(lineBatchNumberField.getText().trim());
             line.setExpiryDate(lineExpiryDatePicker.getValue());
             line.setManufactureDate(lineManufactureDatePicker.getValue());
-
-            String qtyText = lineQtyField.getText().trim();
-            String costText = lineCostPriceField.getText().trim();
-            String sellText =lineSellingPriceField.getText().trim();
-
-            try {
-                int qty = Integer.parseInt(qtyText);
-                double cost = Double.parseDouble(costText);
-                double sell = Double.parseDouble(sellText);
-
-                if (qty <= 0) {
-                    new Alert(Alert.AlertType.ERROR, "Quantity must be greater than zero!").show();
-                    return;
-                }
-
-                if (cost <= 0 || sell <= 0) {
-                    new Alert(Alert.AlertType.ERROR, "Price must be a positive value!").show();
-                    return;
-                }
-
-                if (sell < cost) {
-                    new Alert(Alert.AlertType.WARNING, "Selling Price is lower than Cost Price!").show();
-                }
-
-                line.setQuantity(qty);
-                line.setCostPrice(cost);
-                line.setSellingPrice(sell);
-
-            } catch (NumberFormatException e) {
-                new Alert(Alert.AlertType.ERROR, "Please enter valid numbers!").show();
-                return;
-            }
-
+            line.setQuantity(qty);
+            line.setCostPrice(cost);
+            line.setSellingPrice(sell);
             line.calculateLineTotal();
-            lineList.add(line);
+
+            // ✅ DTO → TM (table display)
+            GRNLineTM tm = new GRNLineTM(
+                    line.getProductId(),
+                    line.getProductName(),
+                    line.getBatchNumber(),
+                    line.getExpiryDate(),
+                    line.getManufactureDate(),
+                    line.getQuantity(),
+                    line.getCostPrice(),
+                    line.getSellingPrice(),
+                    line.getLineTotal()
+            );
+
+            lineList.add(tm);
             updateSummary();
             clearLineFields();
 
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Please enter valid numbers!").show();
         } catch (Exception e) {
-            showAlert("Error", "Failed to add line!");
+            showAlert("Error", "Failed to add line: " + e.getMessage());
         }
     }
 
+    // ---------------------------------------------------------------
     @FXML
     private void handleResetLine() {
         clearLineFields();
     }
 
+    // ---------------------------------------------------------------
     @FXML
     private void handleSaveGRN() {
         if (supplierCombo.getValue() == null) {
@@ -257,9 +236,27 @@ public class GRNController implements Initializable {
             showAlert("Required", "Please add at least one line item!");
             return;
         }
+
         try {
             long supplierId = supplierBO.getSupplierIdByName(supplierCombo.getValue());
-            GrnDTO grn= new GrnDTO();
+
+            // ✅ TM → DTO list (BO layer DTO expect කරනවා)
+            List<GrnLineDTO> lineDTOList = new ArrayList<>();
+            for (GRNLineTM tm : lineList) {
+                GrnLineDTO dto = new GrnLineDTO();
+                dto.setProductId(tm.getProductId());
+                dto.setProductName(tm.getProductName());
+                dto.setBatchNumber(tm.getBatchNumber());
+                dto.setExpiryDate(tm.getExpiryDate());
+                dto.setManufactureDate(tm.getManufactureDate());
+                dto.setQuantity(tm.getQuantity());
+                dto.setCostPrice(tm.getCostPrice());
+                dto.setSellingPrice(tm.getSellingPrice());
+                dto.setLineTotal(tm.getLineTotal());
+                lineDTOList.add(dto);
+            }
+
+            GrnDTO grn = new GrnDTO();
             grn.setGrnNumber(grnNumberField.getText().trim());
             grn.setSupplierId(supplierId);
             grn.setGrnDate(grnDatePicker.getValue());
@@ -267,10 +264,9 @@ public class GRNController implements Initializable {
             grn.setReceivedBy(getCurrentUserId());
 
             String reference = referenceNumberField.getText().trim();
-            String notes = reference.isEmpty() ? "" : "Reference (PO/Invoice): " + reference;
-            grn.setNotes(notes);
+            grn.setNotes(reference.isEmpty() ? "" : "Reference (PO/Invoice): " + reference);
 
-            grn.setLines(lineList);
+            grn.setLines(lineDTOList); // ✅ DTO list → BO
 
             boolean success = grnBO.saveGRNWithTransaction(grn);
 
@@ -280,28 +276,30 @@ public class GRNController implements Initializable {
             } else {
                 showAlert("Failed", "Failed to save GRN!");
             }
+
         } catch (SQLIntegrityConstraintViolationException i) {
             showAlert("Error", "Save failed: " + i.getMessage());
-
         } catch (Exception e) {
             showAlert("Error", "Save failed: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    // ---------------------------------------------------------------
     @FXML
     private void handleResetForm() {
         clearAll();
     }
 
+    // ---------------------------------------------------------------
     private void clearAll() {
         supplierCombo.getSelectionModel().clearSelection();
         grnDatePicker.setValue(LocalDate.now());
-        grnNumberField.setText("Auto-generated");
         referenceNumberField.clear();
         lineList.clear();
         clearLineFields();
         updateSummary();
+        generateGrnNumber(); // ✅ save වෙලා reset වෙනකොට නව GRN number
     }
 
     private void clearLineFields() {
@@ -314,30 +312,34 @@ public class GRNController implements Initializable {
         lineSellingPriceField.clear();
     }
 
+    // ---------------------------------------------------------------
     private void updateSummary() {
-        int items = lineList.size();
-        int qty = lineList.stream().mapToInt(GRNLineTM::getQuantity).sum();
-        double costTotal = lineList.stream().mapToDouble(l -> l.getQuantity() * l.getCostPrice()).sum();
-        double sellTotal = lineList.stream().mapToDouble(l -> l.getQuantity() * l.getSellingPrice()).sum();
-        double profit = sellTotal - costTotal;
+        int    items         = lineList.size();
+        int    qty           = lineList.stream().mapToInt(GRNLineTM::getQuantity).sum();
+        double costTotal     = lineList.stream().mapToDouble(l -> l.getQuantity() * l.getCostPrice()).sum();
+        double sellTotal     = lineList.stream().mapToDouble(l -> l.getQuantity() * l.getSellingPrice()).sum();
+        double profit        = sellTotal - costTotal;
         double profitPercent = costTotal > 0 ? (profit / costTotal) * 100 : 0;
 
-        totalItemsLabel.setText(String.valueOf(items));
-        totalQtyLabel.setText(String.valueOf(qty));
-        totalCostLabel.setText("Rs. " + String.format("%.2f", costTotal));
+        totalItemsLabel  .setText(String.valueOf(items));
+        totalQtyLabel    .setText(String.valueOf(qty));
+        totalCostLabel   .setText("Rs. " + String.format("%.2f", costTotal));
         totalSellingLabel.setText("Rs. " + String.format("%.2f", sellTotal));
         profitMarginLabel.setText("Rs. " + String.format("%.2f", profit));
         profitPercentLabel.setText(String.format("%.2f", profitPercent) + " %");
     }
 
+    // ---------------------------------------------------------------
     private boolean validateLine() {
-        if (lineProductCombo.getValue() == null || lineBatchNumberField.getText().trim().isEmpty()
-                || lineExpiryDatePicker.getValue() == null || lineQtyField.getText().trim().isEmpty()
-                || lineCostPriceField.getText().trim().isEmpty() || lineSellingPriceField.getText().trim().isEmpty()) {
+        if (lineProductCombo.getValue() == null
+                || lineBatchNumberField.getText().trim().isEmpty()
+                || lineExpiryDatePicker.getValue() == null
+                || lineQtyField.getText().trim().isEmpty()
+                || lineCostPriceField.getText().trim().isEmpty()
+                || lineSellingPriceField.getText().trim().isEmpty()) {
             showAlert("Required", "Please fill all required fields!");
             return false;
         }
-
         try {
             Integer.parseInt(lineQtyField.getText().trim());
             Double.parseDouble(lineCostPriceField.getText().trim());
@@ -346,15 +348,14 @@ public class GRNController implements Initializable {
             showAlert("Invalid", "Quantity, Cost and Selling Price must be valid numbers!");
             return false;
         }
-
         if (lineExpiryDatePicker.getValue().isBefore(LocalDate.now())) {
             showAlert("Invalid", "Expiry date cannot be in the past!");
             return false;
         }
-
         return true;
     }
 
+    // ---------------------------------------------------------------
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -367,15 +368,12 @@ public class GRNController implements Initializable {
         return 1;
     }
 
+    // ---------------------------------------------------------------
     @FXML
     private void handleAutoGenerateBatch(ActionEvent event) {
         try {
-            int currentRowCount = lineItemsTable.getItems().size();
-
-            String nextBatch = batchBO.generateNextBatchNumber(currentRowCount);
-
+            String nextBatch = batchBO.generateNextBatchNumber(lineItemsTable.getItems().size());
             lineBatchNumberField.setText(nextBatch);
-
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Batch Number Error: " + e.getMessage()).show();
         } catch (ClassNotFoundException e) {

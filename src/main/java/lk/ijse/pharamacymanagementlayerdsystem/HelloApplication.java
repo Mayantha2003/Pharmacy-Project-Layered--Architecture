@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
+
     private static Scene scene;
     private static Stage primaryStage;
 
@@ -18,7 +19,7 @@ public class HelloApplication extends Application {
         primaryStage = stage;
         scene = new Scene(loadFXML("Login"),800,600);
         primaryStage.setMaximized(false);
-        primaryStage.getIcons().add(new Image(HelloApplication.class.getResourceAsStream("/assests/image/pharmacy.png")));
+        primaryStage.getIcons().add(new Image(HelloApplication.class.getResourceAsStream("assests/image/pharmacy.png")));
         primaryStage.setTitle("Pharmacy Management System - Login");
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
@@ -34,7 +35,7 @@ public class HelloApplication extends Application {
             primaryStage.setMaximized(true);
             primaryStage.centerOnScreen();
             primaryStage.show();
-            primaryStage.getIcons().add(new Image(HelloApplication.class.getResourceAsStream("/assests/image/pharmacy.png")));
+            primaryStage.getIcons().add(new Image(HelloApplication.class.getResourceAsStream("assests/image/pharmacy.png")));
             primaryStage.setTitle("Pharmacy Management System - Dashboard");
             primaryStage.toFront();
         } else {
@@ -54,5 +55,7 @@ public class HelloApplication extends Application {
         launch();
     }
 
-
 }
+
+
+

@@ -39,7 +39,7 @@
                         <!-- Logo & Title -->
                         <ImageView fitHeight="55.0" fitWidth="129.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../../image/pharmacy.png" />
+                                <Image url="@assests/image/patient.png" />
                             </image>
                             <VBox.margin>
                                 <Insets bottom="5.0" left="60.0" right="60.0" top="25.0" />
@@ -89,7 +89,7 @@
                                 <Insets bottom="20" />
                             </VBox.margin>
                         </Button>
-                  <Button fx:id="btnCategorie" blendMode="MULTIPLY" onAction="#clickCategorieNav" prefHeight="40.0" prefWidth="198.0" style="-fx-font-weight: bold; -fx-background-radius: 8;" text="Categorie Management">
+                  <Button fx:id="btnCategorie" blendMode="MULTIPLY" onAction="#clickCategoryNav" prefHeight="40.0" prefWidth="198.0" style="-fx-font-weight: bold; -fx-background-radius: 8;" text="Categorie Management">
                      <font>
                         <Font name="System Bold" size="15" />
                      </font>

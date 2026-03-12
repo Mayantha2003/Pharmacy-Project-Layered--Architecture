@@ -2,7 +2,9 @@ package lk.ijse.pharamacymanagementlayerdsystem.bo.custom.impl;
 
 import lk.ijse.pharamacymanagementlayerdsystem.bo.custom.DashBoardBO;
 import lk.ijse.pharamacymanagementlayerdsystem.dao.DAOFactory;
-import lk.ijse.pharamacymanagementlayerdsystem.dao.custom.DashboardDAO;
+import lk.ijse.pharamacymanagementlayerdsystem.dao.custom.BatchDAO;
+import lk.ijse.pharamacymanagementlayerdsystem.dao.custom.CustomerDAO;
+import lk.ijse.pharamacymanagementlayerdsystem.dao.custom.InvoiceDAO;
 import lk.ijse.pharamacymanagementlayerdsystem.dao.custom.QueryDAO;
 import lk.ijse.pharamacymanagementlayerdsystem.dto.ExpiredMedicineDTO;
 import lk.ijse.pharamacymanagementlayerdsystem.dto.LowStockDTO;
@@ -14,32 +16,34 @@ import java.util.Map;
 
 public class DashboardBOImpl implements DashBoardBO {
 
-    DashboardDAO dashboardDAO = (DashboardDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.DASHBOARD);
+    BatchDAO batchDAO = (BatchDAO)DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.BATCH);
     QueryDAO queryDAO = (QueryDAO)DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.QUERY);
+    CustomerDAO customerBO = (CustomerDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.CUSTOMER);
+    InvoiceDAO invoiceBO =(InvoiceDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.INVOICE);
 
     @Override
     public double getTotalRevenue(String filter) throws SQLException, ClassNotFoundException {
-        return dashboardDAO.getTotalRevenue(filter);
+        return invoiceBO.getTotalRevenue(filter);
     }
 
     @Override
     public int getOrderCount(String filter) throws SQLException, ClassNotFoundException {
-        return dashboardDAO.getOrderCount(filter);
+        return invoiceBO.getOrderCount(filter);
     }
 
     @Override
     public int getCustomerCount() throws SQLException, ClassNotFoundException {
-        return dashboardDAO.getCustomerCount();
+        return customerBO.getCustomerCount();
     }
 
     @Override
     public Map<String, Double> getChartData(String filter) throws SQLException, ClassNotFoundException {
-        return dashboardDAO.getChartData(filter);
+        return invoiceBO.getChartData(filter);
     }
 
     @Override
     public int getExpiredCount() throws SQLException, ClassNotFoundException {
-        return dashboardDAO.getExpiredCount();
+        return batchDAO.getExpiredCount();
     }
 
     @Override

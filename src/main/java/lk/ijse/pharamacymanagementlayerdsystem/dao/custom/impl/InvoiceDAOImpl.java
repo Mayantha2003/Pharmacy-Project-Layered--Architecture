@@ -3,10 +3,13 @@ package lk.ijse.pharamacymanagementlayerdsystem.dao.custom.impl;
 import lk.ijse.pharamacymanagementlayerdsystem.dao.CRUDUtil;
 import lk.ijse.pharamacymanagementlayerdsystem.dao.custom.InvoiceDAO;
 import lk.ijse.pharamacymanagementlayerdsystem.entity.Invoice;
+import lk.ijse.pharamacymanagementlayerdsystem.util.DataFilter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class InvoiceDAOImpl implements InvoiceDAO {
 
@@ -47,7 +50,35 @@ public class InvoiceDAOImpl implements InvoiceDAO {
         return -1;
     }
 
+    @Override
+    public double getTotalRevenue(String filter) throws SQLException, ClassNotFoundException {
+            String condition = filter.equals("Today") ? "= CURDATE()" : ">= " + DataFilter.getDateFilter(filter);
+            String sql = "SELECT SUM(total_amount) FROM Invoice WHERE invoice_date " + condition;
+            ResultSet rs = CRUDUtil.execute(sql);
+            return rs.next() ? rs.getDouble(1) : 0.0;
+    }
 
+    @Override
+    public int getOrderCount(String filter) throws SQLException, ClassNotFoundException {
+            String condition = filter.equals("Today") ? "= CURDATE()" : ">= " + DataFilter.getDateFilter(filter);
+            String sql = "SELECT COUNT(*) FROM Invoice WHERE invoice_date " + condition;
+            ResultSet rs = CRUDUtil.execute(sql);
+            return rs.next() ? rs.getInt(1) : 0;
+    }
+
+    @Override
+    public Map<String, Double> getChartData(String filter) throws SQLException, ClassNotFoundException {
+            String condition = ">= " + DataFilter.getDateFilter(filter);
+            String sql = "SELECT invoice_date, SUM(total_amount) FROM Invoice "
+                    + "WHERE invoice_date " + condition + " GROUP BY invoice_date ORDER BY invoice_date ASC";
+
+            ResultSet rs = CRUDUtil.execute(sql);
+            Map<String, Double> data = new LinkedHashMap<>();
+            while (rs.next()) {
+                data.put(rs.getString(1), rs.getDouble(2));
+            }
+            return data;
+    }
 
 
     //Not Use Method

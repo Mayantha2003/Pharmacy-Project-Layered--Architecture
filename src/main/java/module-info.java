@@ -7,13 +7,14 @@ module lk.ijse.pharamacymanagementlayerdsystem {
     requires net.sf.jasperreports.core;
     requires javafx.graphics;
     requires java.sql.rowset;
+    requires java.desktop;
 
 
     opens lk.ijse.pharamacymanagementlayerdsystem to javafx.fxml;
     opens lk.ijse.pharamacymanagementlayerdsystem.controller to javafx.fxml;
     opens lk.ijse.pharamacymanagementlayerdsystem.view.tdm to javafx.base;
-
-    opens lk.ijse.pharamacymanagementlayerdsystem.dto to javafx.base;
+    opens lk.ijse.pharamacymanagementlayerdsystem.dto to javafx.base, net.sf.jasperreports.core;
+    opens lk.ijse.pharamacymanagementlayerdsystem.entity to net.sf.jasperreports.core;
 
     exports lk.ijse.pharamacymanagementlayerdsystem;
     exports lk.ijse.pharamacymanagementlayerdsystem.controller;

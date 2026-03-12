@@ -11,8 +11,6 @@ import lk.ijse.pharamacymanagementlayerdsystem.dto.GrnLineDTO;
 import lk.ijse.pharamacymanagementlayerdsystem.entity.Batch;
 import lk.ijse.pharamacymanagementlayerdsystem.entity.Grn;
 import lk.ijse.pharamacymanagementlayerdsystem.entity.GrnLine;
-import lk.ijse.pharamacymanagementlayerdsystem.view.tdm.GRNLineTM;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -40,7 +38,7 @@ public class GRNBOImpl implements GRNBO {
             }
             long grnId = grnDAO.getLastId();
             // 3. Save Lines & Batches
-            for (GRNLineTM line : grnDTO.getLines()) {
+            for (GrnLineDTO line : grnDTO.getLines()) {
 
                 boolean isDetailSaved = grnDetailsDAO.save(new GrnLine(
                         grnId, line.getProductId(), line.getBatchNumber(),

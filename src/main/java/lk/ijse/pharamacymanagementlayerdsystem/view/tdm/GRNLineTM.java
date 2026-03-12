@@ -47,6 +47,20 @@ public class GRNLineTM {
         this.lineTotal = lineTotal;
     }
 
+    public GRNLineTM(long productId, String productName, String batchNumber, LocalDate expiryDate,
+                     LocalDate manufactureDate, int quantity, double costPrice, double sellingPrice,
+                     double lineTotal) {
+        this.productId = productId;
+        this.productName = productName;
+        this.batchNumber = batchNumber;
+        this.expiryDate = expiryDate;
+        this.manufactureDate = manufactureDate;
+        this.quantity = quantity;
+        this.costPrice = costPrice;
+        this.sellingPrice = sellingPrice;
+        this.lineTotal = lineTotal;
+    }
+
     public long getGrnDetailId() {
         return grnDetailId;
     }
