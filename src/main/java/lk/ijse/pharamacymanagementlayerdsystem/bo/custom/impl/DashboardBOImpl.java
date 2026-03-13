@@ -12,6 +12,7 @@ import lk.ijse.pharamacymanagementlayerdsystem.dto.LowStockDTO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class DashboardBOImpl implements DashBoardBO {
@@ -57,30 +58,31 @@ public class DashboardBOImpl implements DashBoardBO {
     }
 
     @Override
-    public ArrayList<ExpiredMedicineDTO> getExpiredMedicines() throws SQLException, ClassNotFoundException {
+    public List<ExpiredMedicineDTO> getExpiredMedicines() throws SQLException, ClassNotFoundException {
 
         ResultSet rs = queryDAO.getExpiredMedicines();
-        ArrayList<ExpiredMedicineDTO> expiredList = new ArrayList<>();
+        List<ExpiredMedicineDTO> expiredList = new ArrayList<>();
 
         while (rs.next()) {
             expiredList.add(new ExpiredMedicineDTO(
-                    rs.getString("medicine_name"),
+                    rs.getString("name"),
+                    rs.getString("batch_number"),
                     rs.getDate("expiry_date").toString(),
-                    rs.getInt("qty")
+                    rs.getInt("qty_remaining")
             ));
         }
         return expiredList;
     }
 
     @Override
-    public ArrayList<LowStockDTO> getLowStockMedicines() throws SQLException, ClassNotFoundException {
+    public List<LowStockDTO> getLowStockMedicines() throws SQLException, ClassNotFoundException {
         ResultSet rs = queryDAO.getLowStockMedicines();
-        ArrayList<LowStockDTO> lowStockList = new ArrayList<>();
+        List<LowStockDTO> lowStockList = new ArrayList<>();
 
         while (rs.next()) {
             lowStockList.add(new LowStockDTO(
-                    rs.getString("medicine_name"),
-                    rs.getInt("qty_remaining")
+                    rs.getString("name"),
+                    rs.getInt("total_qty")
             ));
         }
         return lowStockList;

@@ -10,6 +10,7 @@ public class DashboardStatsDTO {
 
     public DashboardStatsDTO() {}
 
+
     public DashboardStatsDTO(double totalRevenue, double totalProfit, int orderCount,
                              int customerCount, int expiredCount, int lowStockCount) {
         this.totalRevenue  = totalRevenue;

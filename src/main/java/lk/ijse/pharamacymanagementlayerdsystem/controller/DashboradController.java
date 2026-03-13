@@ -20,6 +20,8 @@ import javafx.util.Duration;
 import lk.ijse.pharamacymanagementlayerdsystem.bo.BOFactory;
 import lk.ijse.pharamacymanagementlayerdsystem.bo.custom.DashBoardBO;
 import lk.ijse.pharamacymanagementlayerdsystem.db.DBConnection;
+import lk.ijse.pharamacymanagementlayerdsystem.dto.ExpiredMedicineDTO;
+import lk.ijse.pharamacymanagementlayerdsystem.dto.LowStockDTO;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -205,21 +207,23 @@ public class DashboradController implements Initializable {
     private void loadTableData(TableView<Map<String, String>> table, String type) {
         ObservableList<Map<String, String>> list = FXCollections.observableArrayList();
         try {
-            ResultSet rs = type.equals("expired") ? (ResultSet) dashBoardBO.getExpiredMedicines() : (ResultSet) dashBoardBO.getLowStockMedicines();
-            while (rs.next()) {
-                Map<String, String> row = new HashMap<>();
-
-                if (type.equals("lowstock")) {
-                    row.put("name", rs.getString("name"));
-                    row.put("batch", "All Batches");
-                    row.put("qty", rs.getString("total_qty"));
-                } else {
-                    row.put("name", rs.getString("name"));
-                    row.put("batch", rs.getString("batch_number"));
-                    row.put("qty", rs.getString("qty_remaining"));
-                    row.put("date", rs.getString("expiry_date"));
+            if (type.equals("expired")) {
+                for (ExpiredMedicineDTO dto : dashBoardBO.getExpiredMedicines()) {
+                    Map<String, String> row = new HashMap<>();
+                    row.put("name", dto.getName());
+                    row.put("batch", dto.getBatchNumber());
+                    row.put("qty", String.valueOf(dto.getQtyRemaining()));
+                    row.put("date", dto.getExpiryDate());
+                    list.add(row);
                 }
-                list.add(row);
+            } else {
+                for (LowStockDTO dto : dashBoardBO.getLowStockMedicines()) {
+                    Map<String, String> row = new HashMap<>();
+                    row.put("name", dto.getName());
+                    row.put("batch", "All Batches");
+                    row.put("qty", String.valueOf(dto.getTotalQty()));
+                    list.add(row);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

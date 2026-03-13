@@ -16,8 +16,8 @@ public class ExpiredMedicineDTO {
         this.qtyRemaining = qtyRemaining;
     }
 
-    public ExpiredMedicineDTO(String medicineName, String expiryDate, int qty) {
-        this.name         = medicineName;
+    public ExpiredMedicineDTO(String name, String expiryDate, int qty) {
+        this.name         = name;
         this.expiryDate   = expiryDate;
         this.qtyRemaining = qty;
 

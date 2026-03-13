@@ -7,6 +7,7 @@ import lk.ijse.pharamacymanagementlayerdsystem.dto.LowStockDTO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface DashBoardBO extends SuperBO {
@@ -25,7 +26,7 @@ public interface DashBoardBO extends SuperBO {
 
     public int getLowStockCount() throws SQLException, ClassNotFoundException;
 
-    public ArrayList<ExpiredMedicineDTO>getExpiredMedicines() throws SQLException, ClassNotFoundException;
+    public List<ExpiredMedicineDTO> getExpiredMedicines() throws SQLException, ClassNotFoundException;
 
-    public ArrayList<LowStockDTO>getLowStockMedicines() throws SQLException, ClassNotFoundException;
+    public List<LowStockDTO>getLowStockMedicines() throws SQLException, ClassNotFoundException;
 }
