@@ -1,7 +1,4 @@
 package lk.ijse.pharamacymanagementlayerdsystem.bo;
-
-import lk.ijse.pharamacymanagementlayerdsystem.bo.custom.CategoryBO;
-import lk.ijse.pharamacymanagementlayerdsystem.bo.custom.ProductBO;
 import lk.ijse.pharamacymanagementlayerdsystem.bo.custom.impl.*;
 
 public class BOFactory {

@@ -1,13 +1,8 @@
 package lk.ijse.pharamacymanagementlayerdsystem.dao.custom;
 
-import lk.ijse.pharamacymanagementlayerdsystem.dao.CRUDUtil;
 import lk.ijse.pharamacymanagementlayerdsystem.dao.CrudDAO;
 import lk.ijse.pharamacymanagementlayerdsystem.entity.Invoice;
-import lk.ijse.pharamacymanagementlayerdsystem.util.DataFilter;
-
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public interface InvoiceDAO extends CrudDAO<Invoice> {
